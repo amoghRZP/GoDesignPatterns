@@ -1,5 +1,7 @@
 package creational
 
+import "sync"
+
 // Interface for increment method
 type SingletonInterface interface {
 	Increment() int64
@@ -11,12 +13,19 @@ type Singleton struct {
 }
 
 var instance *Singleton
+var once sync.Once
 
 // Function to get singleton instance (equivalent to static method in java)
 func GetInstance() *Singleton {
-	if instance == nil {
+
+	// if instance == nil {
+	// 	instance = new(Singleton)     //<--- Not Thread safe
+	// }
+
+	once.Do(func() {
 		instance = new(Singleton)
-	}
+	})
+
 	return instance
 }
 
